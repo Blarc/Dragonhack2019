@@ -7,41 +7,47 @@
     android:background="#000000"
     tools:context=".Activities.FollowerActivity">
 
-    <ImageButtonButton
+    <ImageView
+        android:layout_width="203dp"
+        android:layout_height="81dp"
+        android:background="@drawable/sessions"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="16dp" />
+    <ImageButton
         android:id="@+id/naMainActivity"
-        android:layout_width="145dp"
-        android:layout_height="56dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/back"
         android:onClick="goToMainActivity"
         android:text="@string/naMainActivityText"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintHorizontal_bias="0.024"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayoutHosts"
-        android:layout_width="286dp"
-        android:layout_height="504dp"
-        android:layout_marginTop="56dp"
+        android:layout_width="289dp"
+        android:layout_height="466dp"
+        android:layout_marginTop="96dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@+id/linearLayoutHostsButtons"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutHostsButtons"
-        android:layout_width="129dp"
-        android:layout_height="504dp"
-        android:layout_marginTop="56dp"
+        android:layout_width="121dp"
+        android:layout_height="465dp"
+        android:layout_marginTop="96dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
