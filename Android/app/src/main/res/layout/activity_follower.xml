@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context=".Activities.FollowerActivity">
 
-    <Button
+    <ImageButtonButton
         android:id="@+id/naMainActivity"
         android:layout_width="145dp"
         android:layout_height="56dp"
@@ -14,38 +15,34 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="32dp"
         android:onClick="goToMainActivity"
         android:text="@string/naMainActivityText"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.032"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayoutHosts"
-        android:layout_width="285dp"
-        android:layout_height="421dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="286dp"
+        android:layout_height="504dp"
+        android:layout_marginTop="56dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/naMainActivity"
         app:layout_constraintEnd_toStartOf="@+id/linearLayoutHostsButtons"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutHostsButtons"
-        android:layout_width="114dp"
-        android:layout_height="424dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="129dp"
+        android:layout_height="504dp"
+        android:layout_marginTop="56dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/naMainActivity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
