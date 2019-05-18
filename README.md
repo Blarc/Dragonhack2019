@@ -2,6 +2,7 @@
 
 ###### Members
 
-- George Washington
-- John Adams
-- Thomas Jefferson
+- Matic Bregar
+- Gregor Zadnik
+- Jakob Maležič
+
