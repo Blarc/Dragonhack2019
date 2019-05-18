@@ -11,4 +11,6 @@
     <string name="playButtonTextStop">Stop</string>
     <string name="recordButton">Record</string>
     <string name="recordButtonOnClickListener">recordButtonOnClickListener</string>
+    <string name="imeNaprave">imeNapraveText</string>
+    <string name="razlaga">Connect to this name on follower devices:</string>
 </resources>
