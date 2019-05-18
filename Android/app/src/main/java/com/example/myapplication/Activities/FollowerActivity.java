@@ -2,6 +2,7 @@ package com.example.myapplication.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.myapplication.R;
 import com.google.firebase.database.DataSnapshot;
@@ -20,23 +23,47 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FollowerActivity extends AppCompatActivity {
 
-    private FirebaseDatabase db = FirebaseDatabase.getInstance();
-    private DatabaseReference myRef = db.getReference("/");
-    private List<String> hosts = new ArrayList<>();
+    private void addHostToLayout(String name, LinearLayout layout) {
+        LinearLayout itemLayout = new LinearLayout(this);
+        itemLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-    private LinearLayout layout;
+        TextView textView = new TextView(this);
+        textView.setText(name);
+        itemLayout.addView(textView);
 
-    private void getHosts() {
+        ImageButton btn = new ImageButton(this);
+        btn.setImageResource(R.drawable.join);
+        itemLayout.addView(btn);
+
+        layout.addView(itemLayout);
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_follower);
+
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = db.getReference("/");
+
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                hosts = (ArrayList<String>) dataSnapshot.getValue();
-                Log.i("FollowerActivity", ", prebrali smo snapshot.");
-                Log.i("FollowerActivity", hosts.toString());
+
+                LinearLayout layoutHosts = findViewById(R.id.linearLayoutHosts);
+
+                layoutHosts.removeAllViews();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    addHostToLayout(ds.getKey(), layoutHosts);
+                }
             }
 
             @Override
@@ -44,22 +71,9 @@ public class FollowerActivity extends AppCompatActivity {
                 Log.e("FollowerActivity", "The read failed: " + databaseError.getMessage());
             }
         };
-    }
 
-    private void addHosts() {
-        getHosts();
-        for (String host : hosts) {
+        myRef.addValueEventListener(listener);
 
-        }
-    }
-
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_follower);
-        layout = findViewById(R.id.linearLayoutHosts);
     }
 
     public void goToMainActivity(View view) {
