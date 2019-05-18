@@ -17,14 +17,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HostActivity extends AppCompatActivity {
 
     //naredi povezavo s FireBase
-    String imeNaprave;
-    String pot;
-    FirebaseDatabase db;
-    ArrayList<String> podatki;
+    private String imeNaprave;
+    private String pot;
+    private FirebaseDatabase db;
+    private List<String> podatki;
     //ko se nalozi screen hosta, se izvede funkcija, ki poslje firebase-u ime trenutne naprave
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +49,13 @@ public class HostActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 podatki = (ArrayList<String>) dataSnapshot.getValue();
-                Log.i("MyApp", "prebrali snapshot: ");
-                Log.i("MyApp", podatki.toString());
+                Log.i("HostActivity", "prebrali snapshot: ");
+                Log.i("HostActivity", podatki.toString());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+                Log.e("HostActivity", "The read failed: " + databaseError.getMessage());
             }
         };
         ref.addValueEventListener(listener);
