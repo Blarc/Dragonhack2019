@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToFollowerActivity(View view) {
-        startActivity(new Intent(MainActivity.this, HostActivity.class));
+        startActivity(new Intent(MainActivity.this, FollowerActivity.class));
     }
 
     

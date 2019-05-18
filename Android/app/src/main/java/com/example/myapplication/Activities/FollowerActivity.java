@@ -15,7 +15,9 @@ public class FollowerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_follower);
     }
 
+    // TODO reset back to main
     public void goToMainActivity(View view) {
-        startActivity(new Intent(FollowerActivity.this, MainActivity.class));
+        startActivity(new Intent(FollowerActivity.this, FollowerRecordActivity.class));
     }
+
 }

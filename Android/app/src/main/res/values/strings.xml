@@ -9,4 +9,6 @@
     <string name="recordButtonTextStop">Stop recording</string>
     <string name="playButtonTextPlay">Play</string>
     <string name="playButtonTextStop">Stop</string>
+    <string name="recordButton">Record</string>
+    <string name="recordButtonOnClickListener">recordButtonOnClickListener</string>
 </resources>
