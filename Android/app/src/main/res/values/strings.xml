@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="testButton">TestButton</string>
+    <string name="beHost">Host</string>
+    <string name="beFollower">Follower</string>
+    <string name="naMainActivity">Back</string>
+    <string name="naMainActivityText">Back</string>
 </resources>
