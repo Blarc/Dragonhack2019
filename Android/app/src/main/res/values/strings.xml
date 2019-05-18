@@ -4,4 +4,9 @@
     <string name="beFollower">Follower</string>
     <string name="naMainActivity">Back</string>
     <string name="naMainActivityText">Back</string>
+    <string name="testButton">TestButton</string>
+    <string name="recordButtonTextRecord">Record</string>
+    <string name="recordButtonTextStop">Stop recording</string>
+    <string name="playButtonTextPlay">Play</string>
+    <string name="playButtonTextStop">Stop</string>
 </resources>
