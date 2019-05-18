@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
@@ -17,6 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.List;
 
 public class HostActivity extends AppCompatActivity {
@@ -25,32 +30,37 @@ public class HostActivity extends AppCompatActivity {
     private String imeNaprave;
     private String pot;
     private FirebaseDatabase db;
-    private List<String> podatki;
+    private Map<String, String> podatki;
+    DatabaseReference ref;
     //ko se nalozi screen hosta, se izvede funkcija, ki poslje firebase-u ime trenutne naprave
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
         imeNaprave = getDeviceName();
-        pot = "message/";
+        pot = imeNaprave;
         //izpisemo ime naprave
         TextView ime = (TextView)findViewById(R.id.imeNaprave);
         ime.setText(imeNaprave);
 
-        podatki = new ArrayList<String>();
-        //sendMessage(this.imeNaprave, "Host");
+        podatki = new HashMap<>();
+        //najprej posljemo svoje ime na bazo
+        db = FirebaseDatabase.getInstance();
+        sendMessage(this.imeNaprave, "Host");
         Log.i(null, "Testis1234");
 
         //zacnemo proces branja podatkov iz baze
-        db = FirebaseDatabase.getInstance();
-        DatabaseReference ref = db.getReference(pot);
+        ref = db.getReference(pot);
         // dodamo listener, ki poslusa na mapi ime/
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                podatki = (ArrayList<String>) dataSnapshot.getValue();
-                Log.i("HostActivity", "prebrali snapshot: ");
-                Log.i("HostActivity", podatki.toString());
+                if(dataSnapshot.getValue() instanceof HashMap){
+                    podatki = (HashMap<String, String>) dataSnapshot.getValue();
+                    Log.i("MyApp", "prebrali snapshot: ");
+                    Log.i("MyApp", podatki.toString());
+                    izpisiFollowerje();
+                }
             }
 
             @Override
@@ -60,9 +70,39 @@ public class HostActivity extends AppCompatActivity {
         };
         ref.addValueEventListener(listener);
 
-        //izpisemo vse elemente v podatkih
 
 
+    }
+    //odstrani null vrednosti iz podatkov
+    public void odstraniNull(){
+        Map<String, String> novo = new HashMap<>();
+        for(Map.Entry<String, String> podatek : podatki.entrySet()){
+            if(podatek.getValue() != null){
+                novo.put(podatek.getKey(),podatek.getValue());
+            }
+        }
+        podatki = novo;
+    }
+
+    //izpisemo vse elemente v podatkih
+    public void izpisiFollowerje(){
+        izbrisiFollowerje();
+        odstraniNull();
+        LinearLayout prostor = (LinearLayout) findViewById(R.id.mainLinearLayout);
+        for(Map.Entry<String, String> podatek : podatki.entrySet()){
+            if(podatek.getValue() != null){
+                TextView tv = new TextView(this);
+                tv.setText(podatek.getKey());
+                prostor.addView(tv);
+                Log.i("MyApp", "Dodali textview s tekstom " + tv.getText());
+            }
+        }
+    }
+    //izbrisemo vse elemente v podatkih
+    public void izbrisiFollowerje(){
+        LinearLayout prostor = (LinearLayout) findViewById(R.id.mainLinearLayout);
+        prostor.removeAllViews();
+        Log.i("MyApp", "Odstranili vse viewe");
     }
 
     //spremeni activity nazaj na izbiro med Host in Follower
@@ -82,8 +122,8 @@ public class HostActivity extends AppCompatActivity {
     //nastavi value na poti pot na str
     public void sendMessage(String pot, String str) {
         //reference je pot na bazi
-        DatabaseReference myRef = db.getReference(pot);
-        myRef.setValue(str);
+        ref = db.getReference(pot);
+        ref.setValue(str);
     }
 
     private String capitalize(String str) {

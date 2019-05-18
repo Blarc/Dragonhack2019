@@ -53,6 +53,7 @@
         app:layout_constraintTop_toBottomOf="@+id/razlaga" />
 
     <ScrollView
+        android:id="@+id/mainScrollView"
         android:layout_width="393dp"
         android:layout_height="470dp"
         android:layout_marginStart="8dp"
@@ -69,9 +70,10 @@
         app:layout_constraintVertical_bias="0.057">
 
         <LinearLayout
+            android:id="@+id/mainLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"></LinearLayout>
     </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
