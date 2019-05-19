@@ -18,7 +18,7 @@ public class AudioRecorder {
         stevec++;
         filePath = activity.getExternalCacheDir().getAbsolutePath();
         //filePath += "/" + hostName + "/recording" + stevec + ".mp3";
-        filePath += "/" + hostName + stevec + ".mp4";
+        filePath += "/audiorecordtest" + stevec + ".mp4";
     }
 
     public void startRecording() {
