@@ -12,10 +12,13 @@ public class AudioRecorder {
     private static final String LOG_TAG = "AudioRecorder";
     private static String filePath = null;
     private MediaRecorder recorder = null;
+    private int stevec = 0;
 
-    public AudioRecorder(@NotNull AppCompatActivity activity) {
+    public AudioRecorder(@NotNull AppCompatActivity activity, String hostName) {
+        stevec++;
         filePath = activity.getExternalCacheDir().getAbsolutePath();
-        filePath += "/audiorecordtest.mp3";
+        //filePath += "/" + hostName + "/recording" + stevec + ".mp3";
+        filePath += "/" + hostName + stevec + ".mp4";
     }
 
     public void startRecording() {

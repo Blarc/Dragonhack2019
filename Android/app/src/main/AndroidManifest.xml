@@ -12,7 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.WaitForFile"></activity>
-        <activity android:name=".Activities.FollowerRecordActivity" />
         <activity android:name=".Activities.RecordAudioActivity" />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>

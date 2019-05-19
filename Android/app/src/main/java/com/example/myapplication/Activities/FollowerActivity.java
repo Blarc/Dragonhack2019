@@ -137,8 +137,5 @@ public class FollowerActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToFollowerRecordActivity(View view) {
-        startActivity(new Intent(FollowerActivity.this, FollowerRecordActivity.class));
-    }
 
 }

@@ -1,7 +1,10 @@
 package com.example.myapplication.Activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,13 +15,22 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.myapplication.Classes.AudioRecorder;
+import com.example.myapplication.Classes.FileUploader;
 import com.example.myapplication.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +46,19 @@ public class HostActivity extends AppCompatActivity {
     private Map<String, String> podatki;
     DatabaseReference ref;
     private boolean isRecording = false;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+
+    private boolean permissionToRecordAccepted = false;
+    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private FileUploader fileUploader;
+
+    private AudioRecorder audioRecorder;
+
+    private boolean startRecording = true;
+
+
     //ko se nalozi screen hosta, se izvede funkcija, ki poslje firebase-u ime trenutne naprave
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +70,9 @@ public class HostActivity extends AppCompatActivity {
         TextView ime = (TextView)findViewById(R.id.imeNaprave);
         ime.setText(imeNaprave);
 
+
+        audioRecorder = new AudioRecorder(this, imeNaprave);
+        fileUploader = new FileUploader();
         podatki = new HashMap<>();
         //najprej posljemo svoje ime na bazo
         db = FirebaseDatabase.getInstance();
@@ -64,7 +92,6 @@ public class HostActivity extends AppCompatActivity {
                     izpisiFollowerje();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("HostActivity", "The read failed: " + databaseError.getMessage());
@@ -72,7 +99,41 @@ public class HostActivity extends AppCompatActivity {
         };
         ref.addValueEventListener(listener);
 
+        ref = db.getReference(imeNaprave + "/Start");
 
+        ValueEventListener listener2 = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
+                    Log.i("MyApp", "Zacnemo snemanje ");
+                    toggleRecording();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("HostActivity", "The read failed: " + databaseError.getMessage());
+            }
+        };
+        ref.addValueEventListener(listener2);
+
+        ref = db.getReference(imeNaprave + "/Stop");
+
+        ValueEventListener listener3 = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
+                    Log.i("MyApp", "Zakljucimo s snemanjem ");
+                    toggleRecording();
+                    prenesi();
+                    goToMainActivity();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("HostActivity", "The read failed: " + databaseError.getMessage());
+            }
+        };
+        ref.addValueEventListener(listener3);
 
     }
     //odstrani null vrednosti iz podatkov
@@ -111,6 +172,9 @@ public class HostActivity extends AppCompatActivity {
     public void goToMainActivity(View view) {
         startActivity(new Intent(HostActivity.this, MainActivity.class));
     }
+    public void goToMainActivity() {
+        startActivity(new Intent(HostActivity.this, MainActivity.class));
+    }
 
     public void goToWaitActivity(View view) {
         startActivity(new Intent(HostActivity.this, WaitForFile.class));
@@ -133,6 +197,62 @@ public class HostActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void onRecord(boolean start) {
+        if (start) {
+            audioRecorder.startRecording();
+        } else {
+            audioRecorder.stopRecording();
+        }
+    }
+
+    public void toggleRecording() {
+        onRecord(startRecording);
+        if (!startRecording) {
+            fileUploader.upload(audioRecorder.getFilePath());
+        }
+        startRecording = !startRecording;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+        }
+        if (!permissionToRecordAccepted ) finish();
+
+    }
+
+    public void prenesi(){
+        StorageReference sref = storage.getReferenceFromUrl("gs://micitup-ff7ce.appspot.com/audio/improved.mp3");
+        try {
+            final File localFile = File.createTempFile("improved", "mp3");
+            sref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Local temp file has been created
+                    Log.i("WaitForFile","File downloaded at: " + localFile.getAbsolutePath());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    Log.i("WaitForFile","File NOT downloaded");
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        audioRecorder.close();
     }
 
     public void deleteData(String pot){
