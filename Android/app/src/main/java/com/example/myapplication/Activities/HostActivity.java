@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class HostActivity extends AppCompatActivity {
     private FirebaseDatabase db;
     private Map<String, String> podatki;
     DatabaseReference ref;
+    private boolean isRecording = false;
     //ko se nalozi screen hosta, se izvede funkcija, ki poslje firebase-u ime trenutne naprave
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public class HostActivity extends AppCompatActivity {
         odstraniNull();
         LinearLayout prostor = (LinearLayout) findViewById(R.id.mainLinearLayout);
         for(Map.Entry<String, String> podatek : podatki.entrySet()){
-            if(podatek.getValue() != null){
+            if(podatek.getValue() != null && !podatek.getKey().equals("Start") && !podatek.getKey().equals("Stop")){
                 TextView tv = new TextView(this);
                 tv.setText(podatek.getKey());
                 prostor.addView(tv);
@@ -108,6 +110,34 @@ public class HostActivity extends AppCompatActivity {
     //spremeni activity nazaj na izbiro med Host in Follower
     public void goToMainActivity(View view) {
         startActivity(new Intent(HostActivity.this, MainActivity.class));
+    }
+
+    public void goToWaitActivity(View view) {
+        startActivity(new Intent(HostActivity.this, WaitForFile.class));
+    }
+
+    //glede na trenutno stanje gumba
+    public void toggleRecord(View view){
+        String izpis = "Start";
+        if(isRecording){
+            izpis = "Stop";
+        }
+        sendMessage(this.imeNaprave + "/" + izpis, "Host");
+        Button gumb = (Button) findViewById(R.id.toggleStart);
+        if(isRecording == false){
+            isRecording = true;
+            gumb.setText("Stop recording");
+        } else {
+            gumb.setVisibility(View.GONE);
+            goToWaitActivity(view);
+        }
+
+
+    }
+
+    public void deleteData(String pot){
+        ref = db.getReference(pot);
+        ref.removeValue();
     }
 
     //vrne ime naprave/telefona

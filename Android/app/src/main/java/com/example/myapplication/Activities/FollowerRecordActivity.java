@@ -25,7 +25,7 @@ public class FollowerRecordActivity extends AppCompatActivity {
     private boolean startRecording = true;
 
     // to be deleted
-    private Button recordButton;
+    //private Button recordButton;
 
     private void onRecord(boolean start) {
         if (start) {
@@ -35,13 +35,9 @@ public class FollowerRecordActivity extends AppCompatActivity {
         }
     }
 
-    public void recordButtonOnClick(View view) {
+    public void toggleRecording() {
         onRecord(startRecording);
-        if (startRecording) {
-            recordButton.setText("Stop recording");
-
-        } else {
-            recordButton.setText("Start recording");
+        if (!startRecording) {
             fileUploader.upload(audioRecorder.getFilePath());
         }
         startRecording = !startRecording;
@@ -65,7 +61,6 @@ public class FollowerRecordActivity extends AppCompatActivity {
 
         audioRecorder = new AudioRecorder(this);
         fileUploader = new FileUploader();
-        recordButton = findViewById(R.id.recordButton);
     }
 
     @Override

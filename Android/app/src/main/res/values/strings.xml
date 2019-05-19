@@ -13,4 +13,6 @@
     <string name="recordButtonOnClickListener">recordButtonOnClickListener</string>
     <string name="imeNaprave">imeNapraveText</string>
     <string name="razlaga">Connect to this name on follower devices:</string>
+    <string name="toggleStart">Begin recording</string>
+    <string name="loading">Waiting for host...</string>
 </resources>
